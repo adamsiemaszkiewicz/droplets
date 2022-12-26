@@ -67,3 +67,13 @@ repos:
     hooks:
     - id: mypy
       verbose: true
+
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: pytest-check
+        entry: pytest -m "unit" -v
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true
