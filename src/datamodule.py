@@ -36,7 +36,7 @@ class DropletsClassificationDataModule(LightningDataModule):
         return pd.read_feather(self.dataset_path)
 
     @property
-    def classes(self):
+    def labels(self):
         return self.dataframe["name"].unique()
 
     @property
@@ -57,7 +57,7 @@ class DropletsClassificationDataModule(LightningDataModule):
     def setup(self, stage: Optional[str] = None) -> None:
         _logger.info("Setting up the datasets. This might take a minute...")
 
-        df = self.dataframe()
+        df = self.dataframe
 
         _logger.info("Setting up the training datasets. This might take a minute...")
 
@@ -76,7 +76,7 @@ class DropletsClassificationDataModule(LightningDataModule):
         )
 
         _logger.info("Setting up the validation datasets. This might take a minute...")
-        val_df = df[df["val"]].sort_values(by="image").reset_index(drop=True)
+        val_df = df[df["val"]].sort_values(by="filepath").reset_index(drop=True)
 
         val_images = val_df["filepath"].apply(lambda x: self.data_dir / x).tolist()
         val_labels = val_df["name"].apply(lambda x: self.data_dir / x).tolist()
@@ -88,8 +88,7 @@ class DropletsClassificationDataModule(LightningDataModule):
         )
 
         _logger.info("Setting up the test datasets. This might take a minute...")
-        test_df = df[df["test"]].sort_values(by="image").reset_index(drop=True)
-        self.test_weights = test_df["weight"]
+        test_df = df[df["test"]].sort_values(by="filepath").reset_index(drop=True)
 
         test_images = test_df["filepath"].apply(lambda x: self.data_dir / x).tolist()
         test_labels = test_df["name"].apply(lambda x: self.data_dir / x).tolist()
