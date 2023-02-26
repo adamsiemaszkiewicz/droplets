@@ -11,7 +11,7 @@ def main():
         data_dir=consts.DATA_DIR,
         dataset_path=consts.DATA_DIR / "dataset_2022-12-27_split.feather",
         img_size=(256, 256),
-        batch_size=8,
+        batch_size=4,
         num_workers=6,
     )
 
