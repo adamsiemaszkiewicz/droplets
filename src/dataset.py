@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Callable, Dict, List, Optional
 
-import torch
+import torchvision.transforms
 from flash import DataKeys
 from PIL import Image
 from torch import Tensor
@@ -29,10 +29,12 @@ class DropletsClassificationDataset(Dataset):
         return len(self.inputs)
 
     def __getitem__(self, idx: int) -> Dict[DataKeys, Tensor]:
-        input = Image.open(self.inputs[idx]).convert("RGB")
-        input = torch.from_numpy(input)
+        to_tensor = torchvision.transforms.ToTensor()
 
-        target = torch.from_numpy(self.targets[idx])
+        input = Image.open(self.inputs[idx]).convert("RGB")
+        input = to_tensor(input)
+
+        target = self.targets[idx]
 
         if self.transforms:
             input = self.transforms(input)
