@@ -39,10 +39,6 @@ class DropletsClassificationDataModule(LightningDataModule):
     def labels(self):
         return self.dataframe["name"].unique()
 
-    @property
-    def num_classes(self):
-        return self.classes
-
     def transform_image(self, means: List[float], stds: List[float]) -> Callable[[Tensor], Dict[str, Tensor]]:
         norm = Normalize(means, stds)
 
@@ -64,7 +60,7 @@ class DropletsClassificationDataModule(LightningDataModule):
         train_df = df[df["train"]].sort_values(by="filepath").reset_index(drop=True)
 
         train_images = train_df["filepath"].apply(lambda x: self.data_dir / x).tolist()
-        train_labels = train_df["name"].apply(lambda x: self.data_dir / x).tolist()
+        train_labels = train_df["name"].tolist()
 
         means = df["mean"].mean().tolist()
         stds = df["std"].mean().tolist()
@@ -79,7 +75,7 @@ class DropletsClassificationDataModule(LightningDataModule):
         val_df = df[df["val"]].sort_values(by="filepath").reset_index(drop=True)
 
         val_images = val_df["filepath"].apply(lambda x: self.data_dir / x).tolist()
-        val_labels = val_df["name"].apply(lambda x: self.data_dir / x).tolist()
+        val_labels = val_df["name"].tolist()
 
         self.val_dataset = DropletsClassificationDataset(
             inputs=val_images,
@@ -91,7 +87,7 @@ class DropletsClassificationDataModule(LightningDataModule):
         test_df = df[df["test"]].sort_values(by="filepath").reset_index(drop=True)
 
         test_images = test_df["filepath"].apply(lambda x: self.data_dir / x).tolist()
-        test_labels = test_df["name"].apply(lambda x: self.data_dir / x).tolist()
+        test_labels = test_df["name"].tolist()
 
         self.test_dataset = DropletsClassificationDataset(
             inputs=test_images,
