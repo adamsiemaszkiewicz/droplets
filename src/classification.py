@@ -15,7 +15,7 @@ def main():
         num_workers=6,
     )
 
-    model = ImageClassifier(num_classes=dm.num_classes, labels=dm.classes)
+    model = ImageClassifier(labels=dm.labels)
 
     trainer = Trainer(max_epochs=3)
     trainer.finetune(model, datamodule=dm, strategy="freeze")
